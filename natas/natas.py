@@ -5,7 +5,7 @@ from requests.auth import HTTPBasicAuth
 
 class Natas:
 
-    def __init__(self, username: str, password: str=''):
+    def __init__(self, username: str, password: str='', keep_session: bool=False):
         if not password:
             temp = self._get_pass_from_config(username)
             if temp:
@@ -15,6 +15,13 @@ class Natas:
                 print('Using empty password!')
         self.password = password
         self.username = username
+        if keep_session:
+            self.session = self._create_session()
+        else:
+            self.session = None
+
+    def _create_session(self):
+        return requests.Session()
 
     def _get_pass_from_config(self, username: str):
         with open('passwords') as f:
@@ -28,7 +35,13 @@ class Natas:
                     return password
             return None
 
-    def get_response(self, relative_url: str='', get_data: dict={}, post_data: dict={}, **kwargs) -> BeautifulSoup:
+    def get_cookies(self):
+        return self.session.cookies.get_dict()
+
+    def set_cookie(self, key: str, value: str=None):
+        self.session.cookies.set(key, value)
+
+    def get_response(self, return_raw_response: bool=False, relative_url: str='', get_data: dict={}, post_data: dict={}, **kwargs) -> BeautifulSoup:
         if not post_data:
             post_data = kwargs.get('data', {})
         kwargs['data'] = post_data
@@ -40,11 +53,17 @@ class Natas:
             get = '?' + get[:-1]
 
         url = 'http://{}.natas.labs.overthewire.org{}/{}'.format(self.username,
-                                                              get, relative_url)
+                                                                 get, relative_url)
 
         auth = HTTPBasicAuth(self.username, self.password)
 
-        response = requests.post(url, auth=auth, **kwargs)
+        if self.session:
+            response = self.session.post(url, auth=auth, **kwargs)
+        else:
+            response = requests.post(url, auth=auth, **kwargs)
+
+        if return_raw_response:
+            return response
 
         bs4 = BeautifulSoup(response.content, 'html.parser')
 
