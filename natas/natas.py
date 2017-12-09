@@ -5,7 +5,7 @@ from requests.auth import HTTPBasicAuth
 
 class Natas:
 
-    def __init__(self, username: str, password: str='', keep_session: bool=False, quiet=False):
+    def __init__(self, username: str, password: str='', keep_session: bool=False, quiet=False, custom_url=''):
         if not password:
             temp = self._get_pass_from_config(username)
             if temp:
@@ -17,6 +17,7 @@ class Natas:
                     print('Using empty password!')
         self.password = password
         self.username = username
+        self.custom_url = custom_url
         if keep_session:
             self.session = self._create_session()
         else:
@@ -57,8 +58,11 @@ class Natas:
         if get:
             get = '?' + get[:-1]
 
-        url = 'http://{}.natas.labs.overthewire.org{}/{}'.format(self.username,
+        if not self.custom_url:
+            url = 'http://{}.natas.labs.overthewire.org{}/{}'.format(self.username,
                                                                  get, relative_url)
+        else:
+            url = self.custom_url + get
 
         auth = HTTPBasicAuth(self.username, self.password)
 
