@@ -5,14 +5,16 @@ from requests.auth import HTTPBasicAuth
 
 class Natas:
 
-    def __init__(self, username: str, password: str='', keep_session: bool=False):
+    def __init__(self, username: str, password: str='', keep_session: bool=False, quiet=False):
         if not password:
             temp = self._get_pass_from_config(username)
             if temp:
-                print('Password loaded from passwords file')
+                if not quiet:
+                    print('Password loaded from passwords file')
                 password = temp
             else:
-                print('Using empty password!')
+                if not quiet:
+                    print('Using empty password!')
         self.password = password
         self.username = username
         if keep_session:
@@ -22,6 +24,9 @@ class Natas:
 
     def _create_session(self):
         return requests.Session()
+
+    def renew_session(self):
+        self.session = self._create_session()
 
     def _get_pass_from_config(self, username: str):
         with open('passwords') as f:
