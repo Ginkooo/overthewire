@@ -38,6 +38,7 @@ def main():
                 print(phpsessid)
                 if 'regular user' not in text:
                     print(text)
+                    return
 
 
 if __name__ == '__main__':
