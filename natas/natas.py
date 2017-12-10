@@ -45,6 +45,10 @@ class Natas:
     def base_url(self):
         return self._base_url
 
+    @property
+    def auth(self):
+        return self._auth
+
     def get_cookies(self):
         return self.session.cookies.get_dict()
 
@@ -70,6 +74,7 @@ class Natas:
             url = self.custom_url + get
 
         auth = HTTPBasicAuth(self.username, self.password)
+        self._auth = auth
 
         if self.session:
             response = self.session.post(url, auth=auth, **kwargs)
