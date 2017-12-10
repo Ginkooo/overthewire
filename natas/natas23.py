@@ -3,7 +3,7 @@ from natas import Natas
 natas = Natas('natas23', keep_session=True)
 
 get = {
-        'passwd': '11iloveyou'
+        'passwd': 
         }
 
 r = natas.get_response(get_data=get)
