@@ -41,6 +41,10 @@ class Natas:
                     return password
             return None
 
+    @property
+    def base_url(self):
+        return self._base_url
+
     def get_cookies(self):
         return self.session.cookies.get_dict()
 
@@ -58,9 +62,10 @@ class Natas:
         if get:
             get = '?' + get[:-1]
 
+        self._base_url = 'http://{}.natas.labs.overthewire.org'.format(self.username)
+
         if not self.custom_url:
-            url = 'http://{}.natas.labs.overthewire.org{}/{}'.format(self.username,
-                                                                 get, relative_url)
+            url = self.base_url + '{}/{}'.format(get, relative_url)
         else:
             url = self.custom_url + get
 
