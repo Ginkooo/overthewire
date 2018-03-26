@@ -5,7 +5,7 @@ from requests.auth import HTTPBasicAuth
 
 class Natas:
 
-    def __init__(self, username: str, password: str='', keep_session: bool=False, quiet=False, custom_url=''):
+    def __init__(self, username: str, password: str='', keep_session: bool=False, quiet=False, custom_url='', get_code=False):
         if not password:
             temp = self._get_pass_from_config(username)
             if temp:
@@ -22,6 +22,9 @@ class Natas:
             self.session = self._create_session()
         else:
             self.session = None
+
+        self.__get_code = True
+        self._code_url = f'http://{self.username}.natas.labs.overthewire.org/index-source.html'
 
     def _create_session(self):
         return requests.Session()
@@ -76,10 +79,16 @@ class Natas:
         auth = HTTPBasicAuth(self.username, self.password)
         self._auth = auth
 
+        self.code = ''
+
         if self.session:
             response = self.session.post(url, auth=auth, **kwargs)
+            if self.__get_code:
+                self.code = BeautifulSoup(self.session.post(self._code_url, auth=auth, **kwargs).content, 'html.parser')
         else:
             response = requests.post(url, auth=auth, **kwargs)
+            if self.__get_code:
+                response = BeautifulSoup(request.post(self._code_url, auth=auth, **kwargs).content, 'html.parser')
 
         if return_raw_response:
             return response

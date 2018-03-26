@@ -43,7 +43,7 @@ serialized = base64.encodebytes(serialized).decode('ascii')
 serialized = serialized.replace('\n', '')
 
 prep_natas = Natas('natas26', keep_session=True)
-real_natas = Natas('natas26', keep_session=True)
+real_natas = Natas('natas26', keep_session=True, get_code=True)
 
 real_resp = real_natas.get_response(get_data={
     'x1': 5,
@@ -52,10 +52,11 @@ real_resp = real_natas.get_response(get_data={
     'y2': 4
     })
 
+print(real_natas.code)
+
 drawing = real_natas.get_cookies()['drawing']
 drawing = drawing.replace('%3D', '=')
 drawing = base64.decodebytes(drawing.encode()).decode()
-print(drawing)
 
 
 prep_natas.set_cookie('phpsessid', PHPSESSID)
