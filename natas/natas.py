@@ -5,7 +5,7 @@ from requests.auth import HTTPBasicAuth
 
 class Natas:
 
-    def __init__(self, username: str, password: str='', keep_session: bool=False, quiet=False, custom_url='', get_code=False):
+    def __init__(self, username: str, password: str='', keep_session: bool=False, quiet=True, custom_url='', get_code=False):
         if not password:
             temp = self._get_pass_from_config(username)
             if temp:
