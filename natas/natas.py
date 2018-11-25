@@ -88,7 +88,7 @@ class Natas:
         else:
             response = requests.post(url, auth=auth, **kwargs)
             if self.__get_code:
-                response = BeautifulSoup(request.post(self._code_url, auth=auth, **kwargs).content, 'html.parser')
+                response = BeautifulSoup(requests.post(self._code_url, auth=auth, **kwargs).content, 'html.parser')
 
         if return_raw_response:
             return response
